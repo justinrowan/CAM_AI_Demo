@@ -1,0 +1,328 @@
+<title>The Daily Ostrich</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,800;1,6..72,400&family=Libre+Franklin:wght@400;600;800&display=swap">
+<style>
+/* Layout: classic online-newspaper article — masthead, section nav, ticker, 2-column article + rail */
+:root{
+  --bg:#fbfaf8; --fg:#1b1a19; --muted:#6a6560; --rule:#e2ded8; --panel:#f2efea;
+  --brand:#9e1b22; --brand-ink:#ffffff; --link:#7d1419; --tag:#f6e7b8; --tag-ink:#4a3a00;
+  --serif:"Newsreader", Georgia, "Times New Roman", serif;
+  --sans:"Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141312; --fg:#ece8e2; --muted:#a39d95; --rule:#2f2c29; --panel:#1d1b19;
+  --brand:#c2343c; --brand-ink:#ffffff; --link:#f08b8f; --tag:#4a3d12; --tag-ink:#f6e7b8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141312; --fg:#ece8e2; --muted:#a39d95; --rule:#2f2c29; --panel:#1d1b19;
+  --brand:#c2343c; --brand-ink:#ffffff; --link:#f08b8f; --tag:#4a3d12; --tag-ink:#f6e7b8; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5}
+a{color:inherit;text-decoration:none}
+a:hover{text-decoration:underline}
+a:focus-visible,button:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.wrap{max-width:1140px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+
+/* Top utility bar */
+.util{border-bottom:1px solid var(--rule);font-size:12px;color:var(--muted)}
+.util .wrap{display:flex;justify-content:space-between;gap:12px;padding-block:6px;flex-wrap:wrap}
+.util nav{display:flex;gap:16px}
+
+/* Masthead */
+.mast{background:var(--brand);color:var(--brand-ink)}
+.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px;flex-wrap:wrap}
+.logo{font-family:var(--serif);font-weight:800;font-size:clamp(28px,5vw,44px);letter-spacing:-.02em;line-height:1}
+.logo small{display:block;font-family:var(--sans);font-weight:400;font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-top:6px}
+.mast-actions{display:flex;gap:10px;align-items:center}
+.btn{font:600 13px var(--sans);border:1px solid currentColor;background:transparent;color:inherit;padding:7px 14px;border-radius:2px;cursor:pointer}
+.btn.solid{background:var(--brand-ink);color:var(--brand);border-color:var(--brand-ink)}
+
+/* Section nav */
+.sections{border-bottom:1px solid var(--rule);overflow-x:auto}
+.sections ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;padding-block:10px;font-weight:600;font-size:13px;white-space:nowrap}
+.sections li.on a{color:var(--brand);border-bottom:2px solid var(--brand);padding-bottom:9px}
+
+/* Ticker */
+.ticker{background:var(--panel);border-bottom:1px solid var(--rule);font-size:13px}
+.ticker .wrap{display:flex;gap:12px;align-items:center;padding-block:8px;overflow:hidden}
+.ticker b{background:var(--brand);color:var(--brand-ink);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;flex:none}
+.ticker-track{overflow:hidden;min-width:0;flex:1;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.ticker-track span{display:inline-block;white-space:nowrap;animation:tick 60s linear infinite}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ticker-track span{animation:none}}
+
+/* Article grid */
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:48px;padding-block:28px 56px}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+article{min-width:0}
+.kicker{display:flex;gap:10px;align-items:center;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--brand)}
+.satire-tag{background:var(--tag);color:var(--tag-ink);padding:2px 7px;letter-spacing:.06em}
+h1{font-family:var(--serif);font-weight:800;font-size:clamp(30px,4.6vw,48px);line-height:1.08;letter-spacing:-.015em;margin:12px 0 14px;text-wrap:balance}
+.dek{font-family:var(--serif);font-size:clamp(18px,2.2vw,22px);line-height:1.4;color:var(--muted);margin:0 0 20px;text-wrap:balance}
+.byline{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-block:1px solid var(--rule);padding-block:12px;font-size:13px}
+.author{display:flex;gap:10px;align-items:center}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--panel);display:grid;place-items:center;font:800 14px var(--serif);color:var(--brand);border:1px solid var(--rule)}
+.author strong{display:block}
+.author span{color:var(--muted)}
+.share{display:flex;gap:8px}
+.share a{width:32px;height:32px;border:1px solid var(--rule);border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:var(--muted)}
+.share a:hover{text-decoration:none;color:var(--brand);border-color:var(--brand)}
+
+figure{margin:24px 0}
+figure canvas{width:100%;height:auto;display:block;background:var(--panel);aspect-ratio:16/9;max-width:100%}
+figcaption{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}
+figcaption em{font-style:normal;text-transform:uppercase;letter-spacing:.05em;font-size:11px}
+
+.body{font-family:var(--serif);font-size:19px;line-height:1.62;max-width:66ch}
+.body p{margin:0 0 1.1em}
+.body p:first-child::first-letter{float:left;font-size:3.6em;line-height:.85;font-weight:800;padding:6px 8px 0 0;color:var(--brand)}
+.body a{color:var(--link);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.body h2{font-family:var(--serif);font-size:24px;margin:1.6em 0 .5em;line-height:1.2}
+.pull{border-left:4px solid var(--brand);margin:1.6em 0;padding:4px 0 4px 20px;font-size:25px;line-height:1.3;font-style:italic}
+.pull cite{display:block;font:600 12px var(--sans);font-style:normal;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+.factbox{background:var(--panel);border:1px solid var(--rule);padding:18px 20px;margin:1.6em 0;font-family:var(--sans);font-size:14.5px}
+.factbox h3{margin:0 0 10px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--brand)}
+.factbox dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0}
+.factbox dt{font-weight:800;font-variant-numeric:tabular-nums}
+.factbox dd{margin:0;color:var(--muted)}
+.correction{font-family:var(--sans);font-size:13px;font-style:italic;color:var(--muted);border-top:1px solid var(--rule);padding-top:14px;margin-top:2em}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.tags a{font-size:12px;border:1px solid var(--rule);padding:4px 10px;border-radius:999px;color:var(--muted)}
+
+/* Rail */
+aside{display:flex;flex-direction:column;gap:32px;min-width:0}
+.rail-h{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-top:3px solid var(--fg);padding-top:8px;margin:0 0 12px}
+.most ol{list-style:none;margin:0;padding:0;counter-reset:m;display:flex;flex-direction:column;gap:14px}
+.most li{counter-increment:m;display:grid;grid-template-columns:28px 1fr;gap:8px;font-family:var(--serif);font-size:16px;line-height:1.3;font-weight:600}
+.most li::before{content:counter(m);font:800 22px var(--serif);color:var(--brand);line-height:1}
+.ad{border:1px dashed var(--rule);padding:18px;text-align:center;font-size:13px;color:var(--muted)}
+.ad small{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.ad strong{display:block;font-family:var(--serif);font-size:20px;color:var(--fg);margin-bottom:6px}
+
+/* Related */
+.related{border-top:1px solid var(--rule);padding-block:28px 40px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+.card{display:flex;flex-direction:column;gap:8px}
+.card canvas{width:100%;aspect-ratio:3/2;height:auto;display:block;background:var(--panel)}
+.card .sec{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--brand)}
+.card h4{font-family:var(--serif);font-size:18px;line-height:1.25;margin:0;text-wrap:balance}
+
+footer{background:var(--panel);border-top:1px solid var(--rule);font-size:12.5px;color:var(--muted)}
+footer .wrap{padding-block:28px;display:flex;flex-direction:column;gap:14px}
+footer nav{display:flex;gap:18px;flex-wrap:wrap}
+.disclaimer{max-width:80ch}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--fg);color:var(--bg);padding:10px 16px;font-size:13px;border-radius:3px;opacity:0;pointer-events:none;transition:.25s;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+
+<div class="util"><div class="wrap">
+  <span id="today">Tuesday, October 20, 2026</span>
+  <nav><a href="#">Today's Paper</a><a href="#">Newsletters</a><a href="#">Sign In</a></nav>
+</div></div>
+
+<header class="mast"><div class="wrap">
+  <a href="#" class="logo">The Daily Ostrich<small>Head firmly in the sand since 1887</small></a>
+  <div class="mast-actions"><button class="btn" type="button" id="search-btn">Search</button><button class="btn solid" type="button" id="sub-btn">Subscribe for $0.99*</button></div>
+</div></header>
+
+<nav class="sections" aria-label="Sections"><div class="wrap"><ul>
+  <li><a href="#">U.S.</a></li><li class="on"><a href="#">Local</a></li><li><a href="#">Business</a></li><li><a href="#">Workplace</a></li><li><a href="#">Science-ish</a></li><li><a href="#">Weather Opinions</a></li><li><a href="#">Sports Feelings</a></li><li><a href="#">Obituaries for Houseplants</a></li><li><a href="#">Puzzles</a></li>
+</ul></div></nav>
+
+<div class="ticker"><div class="wrap">
+  <b>Developing</b>
+  <div class="ticker-track"><span>
+    Meeting enters Day 11 · Sandwiches dispatched via drone · "Just one more thing," confirms speaker · Local pigeon elected HOA treasurer · Area man still waiting for "circling back" to land · Meeting enters Day 11 · Sandwiches dispatched via drone · "Just one more thing," confirms speaker · Local pigeon elected HOA treasurer · Area man still waiting for "circling back" to land ·&nbsp;
+  </span></div>
+</div></div>
+
+<main class="wrap">
+  <div class="grid">
+    <article>
+      <div class="kicker"><span>Workplace</span><span class="satire-tag">Satire</span></div>
+      <h1>Man Who Opened Meeting With 'Quick Question' Has Now Been Talking for 11 Days</h1>
+      <p class="dek">Coworkers at a Lower Pemberwick paperclip distributor say they have stopped expecting an end, and have started rotating chairs in shifts.</p>
+
+      <div class="byline">
+        <div class="author"><div class="avatar" aria-hidden="true">MF</div><div><strong>By Marjorie Thistlewood-Fable</strong><span>Senior Correspondent, Meetings Desk · Updated 7:49 a.m. CT</span></div></div>
+        <div class="share" aria-label="Share"><a href="#" aria-label="Share by carrier pigeon">P</a><a href="#" aria-label="Share by shouting">S</a><a href="#" aria-label="Share by fax">F</a><a href="#" aria-label="Copy link">⧉</a></div>
+      </div>
+
+      <figure>
+        <canvas id="hero" width="1280" height="720" aria-label="Illustration of an empty conference table covered in coffee mugs"></canvas>
+        <figcaption>Conference Room B at Brindlewick Fastener Supply, where eleven chairs have been occupied since Oct. 9 and approximately 340 coffee mugs now cover the table. <em>Photo: Placeholdr Stock Imagery</em></figcaption>
+      </figure>
+
+      <div class="body">
+        <p>LOWER PEMBERWICK — What began as a routine 9:00 a.m. stand-up meeting at Brindlewick Fastener Supply entered its eleventh day Tuesday, after regional logistics coordinator Doug Plimsby-Harrow raised his hand and said, according to multiple witnesses, "Real quick question before we wrap."</p>
+
+        <p>He has not stopped speaking since.</p>
+
+        <p>"It started as a question about the Q3 paperclip forecast," said accounts associate Brenda Quillfeather, 44, who was reached by phone from her chair, where she has remained for 263 consecutive hours. "Then it became a question about Q4. Then about the concept of quarters. Around day six he got into whether a paperclip is technically a tool or a lifestyle."</p>
+
+        <p>Company leadership confirmed the meeting is ongoing and described morale as "stable, in the way a hostage situation is stable."</p>
+
+        <blockquote class="pull">"I keep thinking he's about to land it. He makes the landing face. And then he says, 'Which actually brings me to another thing.'"<cite>— Gary Wobblesworth, intern, Day 9</cite></blockquote>
+
+        <h2>A meeting that refused to end</h2>
+
+        <p>Calendar records reviewed by The Daily Ostrich show the meeting was originally scheduled for 15 minutes. It has since been automatically extended 1,056 times by the company's scheduling software, which on Thursday began sending attendees a notification reading simply, "Are you okay?"</p>
+
+        <p>Facilities staff have adapted. Sandwiches are now delivered through the ceiling tiles by a small drone named Kevin. A cot was wheeled in on Day 4 but was declined by Mr. Plimsby-Harrow, who reportedly said he "didn't want to lose momentum."</p>
+
+        <p>Experts say the phenomenon is not unheard of. "We call it Unbounded Clarification Syndrome," said Dr. Penelope Gristlethorn, a professor of Meeting Studies at the entirely fictional Hollowmere Institute of Business Things. "In most cases, the words 'quick question' are a sincere attempt at brevity. In roughly one case in four million, they are a portal."</p>
+		
+        <aside class="factbox" aria-label="By the numbers">
+          <h3>By the numbers</h3>
+          <dl>
+            <dt>11 days</dt><dd>Total length of the "quick" question so far</dd>
+            <dt>1,056</dt><dd>Times the calendar invite has auto-extended</dd>
+            <dt>340</dt><dd>Coffee mugs currently on the conference table</dd>
+            <dt>0</dt><dd>Decisions made</dd>
+            <dt>47</dt><dd>Times the phrase "circle back" has been used, per a tally kept on a whiteboard</dd>
+          </dl>
+        </aside>
+
+        <h2>"He's a good guy," coworkers insist</h2>
+
+        <p>Despite the duration, colleagues described Mr. Plimsby-Harrow as warm, well-meaning and "honestly kind of making some good points around day eight, before the part about his cousin's boat."</p>
+
+        <p>At least two attendees have attempted to leave. Both reported that each time they stood, he turned to them and said, "This actually affects you, so," and they sat back down.</p>
+
+        <p>The company's HR department has issued a statement encouraging staff to "hold all remaining questions until after the current question," and has quietly <a href="#">updated the employee handbook</a> to define a quick question as "any question under 90 seconds, or roughly one-tenth of a sneeze."</p>
+
+        <p>As of press time, Mr. Plimsby-Harrow had paused briefly to sip water, prompting a wave of hope across the room, before clearing his throat and saying, "Okay, last thing."</p>
+
+        <p class="correction">Correction: An earlier version of this article said the meeting was in its tenth day. It is in its eleventh. We apologize to the attendees, who would like that day back.</p>
+      </div>
+
+      <div class="tags"><a href="#">Meetings</a><a href="#">Workplace Hostages</a><a href="#">Lower Pemberwick</a><a href="#">Paperclips</a><a href="#">Circling Back</a></div>
+    </article>
+
+    <aside>
+      <section class="most">
+        <h2 class="rail-h">Most Read</h2>
+        <ol>
+          <li><a href="#">Local Pigeon Elected HOA Treasurer After Promising "More Breadcrumbs, Less Bureaucracy"</a></li>
+          <li><a href="#">Study Finds 9 Out of 10 Dentists Are Just Saying That to Be Nice</a></li>
+          <li><a href="#">Area Man's Group Chat Has Been Planning a Camping Trip Since 2019</a></li>
+          <li><a href="#">Town Votes 6–3 to Officially Make Wednesday 'Optional'</a></li>
+          <li><a href="#">Houseplant Survives Seventh Owner, Now Considered Immortal</a></li>
+        </ol>
+      </section>
+
+      <div class="ad" role="complementary" aria-label="Advertisement">
+        <small>Advertisement</small>
+        <strong>MeetingEnd™ Spray</strong>
+        Just one spritz and every attendee suddenly remembers a "hard stop." Not approved by anyone.
+      </div>
+
+      <section class="most">
+        <h2 class="rail-h">From the Meetings Desk</h2>
+        <ol>
+          <li><a href="#">Opinion: "Let's Take This Offline" Is a Threat, and We Should Treat It Like One</a></li>
+          <li><a href="#">Woman Who Said "I'll Be Brief" Located Three Counties Away, Still Briefing</a></li>
+          <li><a href="#">Reply-All Chain Now Old Enough to Vote</a></li>
+        </ol>
+      </section>
+    </aside>
+  </div>
+
+  <section class="related" aria-label="More stories">
+    <h2 class="rail-h">More From The Daily Ostrich</h2>
+    <div class="cards">
+      <a href="#" class="card"><canvas data-scene="field" width="600" height="400" aria-hidden="true"></canvas><span class="sec">Science-ish</span><h4>Scientists Confirm Cows Have Been Faking Moos This Whole Time</h4></a>
+      <a href="#" class="card"><canvas data-scene="clock" width="600" height="400" aria-hidden="true"></canvas><span class="sec">Business</span><h4>Startup Raises $40 Million to Reinvent the Wristwatch, Produces Sundial</h4></a>
+      <a href="#" class="card"><canvas data-scene="city" width="600" height="400" aria-hidden="true"></canvas><span class="sec">U.S.</span><h4>City of Grandle Heights Accidentally Repaints All Crosswalks as Piano Keys; Traffic Now in C Minor</h4></a>
+      <a href="#" class="card"><canvas data-scene="sea" width="600" height="400" aria-hidden="true"></canvas><span class="sec">Weather Opinions</span><h4>Meteorologist Admits Forecast Was "Mostly Vibes," Ocean Responds</h4></a>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <nav><a href="#">About Us</a><a href="#">Careers in Sand</a><a href="#">Corrections</a><a href="#">Terms of Ignoring</a><a href="#">Privacy (Lol)</a><a href="#">Contact</a></nav>
+  <p class="disclaimer"><strong>The Daily Ostrich is a work of satire.</strong> Every person, company, town, institute, statistic and quote on this page is invented. Any resemblance to real people or real meetings is a coincidence, though we understand if it feels personal. *Subscription price does not exist.</p>
+  <p>© 1887–2026 The Daily Ostrich Publishing Co., Lower Pemberwick. All rights reserved, some rights misplaced.</p>
+</div></footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// Dead links: show a toast instead of navigating
+(function(){
+  const lines=["That story is still being made up.","Our reporter is stuck in a meeting.","This page went out for sandwiches.","404: Article buried in sand.","Link under review by the Department of Links."];
+  const t=document.getElementById('toast'); let h;
+  function say(msg){t.textContent=msg;t.classList.add('show');clearTimeout(h);h=setTimeout(()=>t.classList.remove('show'),2200)}
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('a[href="#"]');
+    if(a){e.preventDefault();say(lines[Math.floor(Math.random()*lines.length)])}
+  });
+  document.getElementById('search-btn').onclick=()=>say("Search is closed. Try looking under the couch.");
+  document.getElementById('sub-btn').onclick=()=>say("Thanks! Your subscription is imaginary, like the price.");
+})();
+
+// "Stock photos", painted on canvas
+function rng(seed){return()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646}}
+function bokeh(ctx,w,h,r,colors,n){
+  ctx.save();ctx.filter='blur(6px)';
+  for(let i=0;i<n;i++){const x=r()*w,y=r()*h*.7,s=10+r()*w*.05;ctx.globalAlpha=.15+r()*.35;ctx.fillStyle=colors[i%colors.length];ctx.beginPath();ctx.arc(x,y,s,0,7);ctx.fill()}
+  ctx.restore();ctx.globalAlpha=1;
+}
+function hero(c){
+  const ctx=c.getContext('2d'),w=c.width,h=c.height,r=rng(7);
+  let g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#cfd8dc');g.addColorStop(.55,'#a7b4ba');g.addColorStop(1,'#6d5a48');
+  ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+  // window panes
+  ctx.fillStyle='rgba(255,255,255,.35)';
+  for(let i=0;i<5;i++){ctx.fillRect(80+i*230,60,190,250)}
+  bokeh(ctx,w,h,r,['#fff7e0','#ffe2a8','#ffffff'],40);
+  // whiteboard
+  ctx.fillStyle='#f4f4f2';ctx.fillRect(820,110,360,220);ctx.strokeStyle='#8a8f93';ctx.lineWidth=6;ctx.strokeRect(820,110,360,220);
+  ctx.strokeStyle='#2b5fa8';ctx.lineWidth=3;ctx.font='bold 30px Georgia';ctx.fillStyle='#2b5fa8';ctx.fillText('CIRCLE BACK',850,160);
+  ctx.strokeStyle='#b02a2a';for(let i=0;i<47;i++){const x=850+(i%16)*19,y=195+Math.floor(i/16)*40;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+28);ctx.stroke()}
+  // table (perspective)
+  ctx.fillStyle='#5b3d26';ctx.beginPath();ctx.moveTo(120,h);ctx.lineTo(420,380);ctx.lineTo(860,380);ctx.lineTo(1160,h);ctx.closePath();ctx.fill();
+  g=ctx.createLinearGradient(0,380,0,h);g.addColorStop(0,'rgba(255,255,255,.18)');g.addColorStop(1,'rgba(0,0,0,.25)');ctx.fillStyle=g;ctx.fill();
+  // mugs
+  const mug=['#ffffff','#e8d6b9','#c94f3f','#2f5d7c','#f2c14e','#7aa36f'];
+  for(let i=0;i<120;i++){
+    const t=r(),y=390+t*t*320,spread=(220+ (y-380)*0.95),x=640+(r()-.5)*2*spread*.95,s=6+((y-380)/320)*26;
+    ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.ellipse(x+s*.2,y+s*.9,s*.9,s*.3,0,0,7);ctx.fill();
+    ctx.fillStyle=mug[i%mug.length];ctx.fillRect(x-s*.6,y-s,s*1.2,s*1.6);
+    ctx.beginPath();ctx.ellipse(x,y-s,s*.6,s*.2,0,0,7);ctx.fillStyle='#3b2416';ctx.fill();
+    ctx.strokeStyle=mug[i%mug.length];ctx.lineWidth=Math.max(1,s*.15);ctx.beginPath();ctx.arc(x+s*.65,y-s*.3,s*.3,-1.4,1.4);ctx.stroke();
+  }
+  // vignette
+  g=ctx.createRadialGradient(w/2,h/2,h*.3,w/2,h/2,h*.9);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.35)');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+}
+const scenes={
+  field(ctx,w,h,r){let g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#9cc8e8');g.addColorStop(.55,'#e6f0d8');g.addColorStop(.56,'#7fae55');g.addColorStop(1,'#4c7a33');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='#fff';for(let i=0;i<4;i++){ctx.beginPath();ctx.ellipse(80+i*150,60+r()*40,50,16,0,0,7);ctx.fill()}
+    // cow
+    ctx.fillStyle='#f5f5f5';ctx.fillRect(220,230,170,80);ctx.fillStyle='#222';ctx.beginPath();ctx.ellipse(270,255,30,20,0,0,7);ctx.ellipse(350,285,22,16,0,0,7);ctx.fill();
+    ctx.fillStyle='#f5f5f5';ctx.fillRect(380,210,50,50);ctx.fillStyle='#e9a8a8';ctx.fillRect(405,240,30,22);
+    ctx.fillStyle='#222';[230,260,350,375].forEach(x=>ctx.fillRect(x,305,14,45));
+    ctx.font='bold 40px Georgia';ctx.fillStyle='#222';ctx.fillText('"moo"?',440,190)},
+  clock(ctx,w,h,r){let g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#3a3f5c');g.addColorStop(1,'#c47b4f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    bokeh(ctx,w,h,r,['#ffd08a','#ffffff'],25);
+    ctx.fillStyle='#d9c7a1';ctx.beginPath();ctx.ellipse(300,280,190,70,0,0,7);ctx.fill();
+    ctx.fillStyle='#6b5a3e';ctx.beginPath();ctx.moveTo(300,280);ctx.lineTo(300,120);ctx.lineTo(340,280);ctx.fill();
+    ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.moveTo(300,280);ctx.lineTo(470,240);ctx.lineTo(470,270);ctx.fill();
+    ctx.strokeStyle='#6b5a3e';ctx.lineWidth=3;for(let i=0;i<12;i++){const a=Math.PI+i*Math.PI/11;ctx.beginPath();ctx.moveTo(300+Math.cos(a)*150,280+Math.sin(a)*55);ctx.lineTo(300+Math.cos(a)*175,280+Math.sin(a)*64);ctx.stroke()}},
+  city(ctx,w,h,r){ctx.fillStyle='#55606b';ctx.fillRect(0,0,w,h);
+    for(let i=0;i<12;i++){const bw=40+r()*50,bh=80+r()*150,x=i*52;ctx.fillStyle=['#7d8a96','#6a7682','#8e9aa5'][i%3];ctx.fillRect(x,180-bh+100,bw,bh)}
+    ctx.fillStyle='#2b2f33';ctx.fillRect(0,260,w,140);
+    for(let i=0;i<14;i++){ctx.fillStyle='#f4f1ea';ctx.fillRect(20+i*42,280,36,110);if([1,2,4,5,6,8,9,11,12,13].includes(i)){ctx.fillStyle='#111';ctx.fillRect(48+i*42,280,24,66)}}},
+  sea(ctx,w,h,r){let g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#5b6e8c');g.addColorStop(.5,'#c9b8a6');g.addColorStop(.51,'#2d5c7a');g.addColorStop(1,'#17344a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='#4a4f5a';for(let i=0;i<5;i++){ctx.beginPath();ctx.ellipse(r()*w,40+r()*90,90+r()*60,30,0,0,7);ctx.fill()}
+    ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=2;for(let y=220;y<h;y+=18){ctx.beginPath();for(let x=0;x<=w;x+=10)ctx.lineTo(x,y+Math.sin(x/30+y)*4);ctx.stroke()}
+    ctx.fillStyle='#e8e2d6';ctx.fillRect(250,150,16,90);ctx.fillStyle='#c0392b';ctx.fillRect(266,150,40,26)}
+};
+function paintAll(){
+  hero(document.getElementById('hero'));
+  document.querySelectorAll('canvas[data-scene]').forEach((c,i)=>{const ctx=c.getContext('2d');scenes[c.dataset.scene](ctx,c.width,c.height,rng(11+i*31));
+    const g=ctx.createRadialGradient(c.width/2,c.height/2,c.height*.3,c.width/2,c.height/2,c.height);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.3)');ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height)});
+}
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(paintAll);
+</script>
